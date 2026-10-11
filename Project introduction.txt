@@ -1,0 +1,57 @@
+1. Project introduction
+
+The Online Bus Pass Booking System is a cloud-based web application that allows users to book bus passes online instead of visiting a bus depot or ticket counter.
+Users can enter their journey details, select a bus pass type, and submit a booking request through a website. The application processes the request, automatically calculates the applicable price based on the selected pass type, generates a unique booking ID, and stores the booking information in a cloud database.
+The system uses AWS serverless services to process requests, store data, and host the website without requiring you to manage a dedicated server.
+2. Problem statement
+
+Traditional bus pass booking systems may require passengers to visit a counter, fill out forms manually, and wait for confirmation. Manual processes can also lead to duplicate records, incorrect fare calculations, and difficulty retrieving booking information.
+The proposed system addresses these challenges by providing an online booking process, centralized cloud storage, automatic fare calculation, and unique booking identifiers.
+3. Project objectives
+
+- Develop an online interface for bus pass bookings.
+- Allow users to submit and manage their booking information.
+- Calculate the pass price automatically based on the selected pass type.
+- Generate a unique booking ID for each booking.
+- Store and retrieve booking records using a cloud database.
+- Provide communication between the frontend and backend through APIs.
+- Apply secure access permissions using AWS IAM roles.
+- Host the website using Amazon S3 static website hosting.
+
+4.Explanation of AWS services use
+1. Amazon S3 — Website hosting
+Amazon Simple Storage Service (S3) is an object storage service. In this project, it stores the website's frontend files, such as HTML, CSS and JavaScript.
+When a user opens the website, the browser loads the frontend files from S3. The JavaScript sends booking requests to API Gateway.
+Why it is used: To host the website without maintaining a web server.
+2. Amazon API Gateway — API management
+API Gateway acts as the communication layer between the frontend and the backend.
+For example, the frontend can send a POST request to create a booking, a GET request to retrieve bookings, or a DELETE request to delete a booking if that operation is implemented.
+API Gateway routes the request to the appropriate Lambda function and returns its response to the browser.
+Why it is used: To expose backend functionality through HTTP endpoints.
+3. AWS Lambda — Backend processing
+AWS Lambda runs Python code in response to API requests. You do not need to manage a server or keep a server running continuously.
+In your project, Lambda handles tasks such as:
+- Validating the submitted booking details.
+- Calculating the fare based on the selected pass type.
+- Generating a unique booking ID.
+- Saving, retrieving, and deleting records as supported by the application.
+- Returning success or error messages.
+Why it is used: To execute the application logic on demand.
+4. Amazon DynamoDB — Database
+DynamoDB is a managed NoSQL database that stores booking records as items in a table. Your project uses a table named BusPassBookings.
+A record can contain the booking ID, passenger details, pass type, source, destination, calculated price and booking status.
+The booking ID is used as the primary partition key to identify each booking. DynamoDB can retrieve a booking using its key and supports efficient database operations at scale.
+Why it is used: To store and retrieve booking data without managing database servers.
+5. AWS IAM Role — Security and permissions
+AWS Identity and Access Management (IAM) controls which AWS resources a service can access.
+You assign an IAM execution role to Lambda. That role contains permissions that allow the function to perform the required operations on the DynamoDB table.
+Lambda obtains temporary credentials through its execution role rather than requiring you to hardcode AWS access keys in the Python code.
+Why it is used: To enforce secure, least-privilege access to AWS resources.
+6. How the project works step by step
+1. User opens the website. The frontend files are served from the S3 website endpoint.
+2. User enters booking details. The user provides the required passenger and journey information and selects a pass type.
+3. Frontend sends an API request. JavaScript sends the details to the appropriate API Gateway endpoint using HTTP.
+4. Lambda processes the request. The Python function validates the data, determines the fare from the pass type and generates a booking ID.
+5. DynamoDB stores the booking. Lambda uses its IAM execution role to access the BusPassBookings table and save the record.
+6. The API returns a response. Lambda returns a success or error response through API Gateway.
+7. The website displays the result. The user sees a booking confirmation and the generated booking ID if the operation succeeds.

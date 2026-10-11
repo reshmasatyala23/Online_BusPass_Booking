@@ -1,0 +1,22 @@
+     Architecture
+
+
+
+
+                 BUS PASS WEBSITE
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+         BOOK PASS              CHECK PASS
+              │                     │
+         POST /booking          GET /booking
+              │                     │
+              └──────────┬──────────┘
+                         ↓
+                  API GATEWAY
+                         ↓
+                     LAMBDA
+                         ↓
+                    DYNAMODB
+                         ↓
+                  BusPassBookings
